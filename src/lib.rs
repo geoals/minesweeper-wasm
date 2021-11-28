@@ -125,6 +125,11 @@ impl Board {
     pub fn reveal(&mut self, x: i32, y: i32) -> bool {
         let u_x = x as usize;
         let u_y = y as usize;
+
+        if self.cells[u_y][u_x].is_flag {
+            return false;
+        }
+
         let was_bomb = self.reveal_single(x, y);
 
         if was_bomb {
@@ -160,7 +165,12 @@ impl Board {
     }
 
     pub fn toggle_flag(&mut self, x: i32, y: i32) {
+        if !self.cells[y as usize][x as usize].is_hidden {
+            return;
+        }
+
         self.cells[y as usize][x as usize].toggle_flag();
+
         if self.cells[y as usize][x as usize].is_flag {
             self.number_of_flags += 1;
         } else {
